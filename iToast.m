@@ -32,8 +32,6 @@ THE SOFTWARE.
 
 #define CURRENT_TOAST_TAG 6984678
 
-static const CGFloat kComponentPadding = 5;
-
 static iToastSettings *sharedSettings = nil;
 
 @interface iToast(private)
@@ -73,7 +71,7 @@ static iToastSettings *sharedSettings = nil;
 	UIFont *font = [UIFont systemFontOfSize:theSettings.fontSize];
 	CGSize textSize = [text sizeWithFont:font constrainedToSize:CGSizeMake(280, 60)];
 	
-	UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, textSize.width + kComponentPadding, textSize.height + kComponentPadding)];
+	UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, textSize.width + [self theSettings].padding, textSize.height + [self theSettings].padding)];
 	label.backgroundColor = [UIColor clearColor];
 	label.textColor = [UIColor whiteColor];
 	label.font = font;
@@ -91,23 +89,24 @@ static iToastSettings *sharedSettings = nil;
         switch ([theSettings imageLocation]) {
             case iToastImageLocationLeft:
                 [label setTextAlignment:UITextAlignmentLeft];
-                label.center = CGPointMake(image.size.width + kComponentPadding * 2 
-                                           + (v.frame.size.width - image.size.width - kComponentPadding * 2) / 2, 
+                label.center = CGPointMake(image.size.width + [self theSettings].padding * 2
+                                           + (v.frame.size.width - image.size.width - [self theSettings].padding * 2) / 2,
                                            v.frame.size.height / 2);
                 break;
             case iToastImageLocationTop:
                 [label setTextAlignment:UITextAlignmentCenter];
                 label.center = CGPointMake(v.frame.size.width / 2, 
-                                           (image.size.height + kComponentPadding * 2 
-                                            + (v.frame.size.height - image.size.height - kComponentPadding * 2) / 2));
+                                           (image.size.height + [self theSettings].padding * 2
+                                            + (v.frame.size.height - image.size.height - [self theSettings].padding * 2) / 2));
                 break;
             default:
                 break;
         }
 		
 	} else {
-		v.frame = CGRectMake(0, 0, textSize.width + kComponentPadding * 2, textSize.height + kComponentPadding * 2);
+		v.frame = CGRectMake(0, 0, textSize.width + [self theSettings].padding * 2, textSize.height + [self theSettings].padding * 2);
 		label.center = CGPointMake(v.frame.size.width / 2, v.frame.size.height / 2);
+		[label setTextAlignment:UITextAlignmentCenter];
 	}
 	CGRect lbfrm = label.frame;
 	lbfrm.origin.x = ceil(lbfrm.origin.x);
@@ -240,13 +239,13 @@ static iToastSettings *sharedSettings = nil;
     switch (location) {
         case iToastImageLocationLeft:
             theRect = CGRectMake(0, 0, 
-                                 imageSize.width + textSize.width + kComponentPadding * 3, 
-                                 MAX(textSize.height, imageSize.height) + kComponentPadding * 2);
+                                 imageSize.width + textSize.width + [self theSettings].padding * 3,
+                                 MAX(textSize.height, imageSize.height) + [self theSettings].padding * 2);
             break;
         case iToastImageLocationTop:
             theRect = CGRectMake(0, 0, 
-                                 MAX(textSize.width, imageSize.width) + kComponentPadding * 2, 
-                                 imageSize.height + textSize.height + kComponentPadding * 3);
+                                 MAX(textSize.width, imageSize.width) + [self theSettings].padding * 2,
+                                 imageSize.height + textSize.height + [self theSettings].padding * 3);
             
         default:
             break;
@@ -264,10 +263,10 @@ static iToastSettings *sharedSettings = nil;
 
     switch ([theSettings imageLocation]) {
         case iToastImageLocationLeft:
-            imageFrame = CGRectMake(kComponentPadding, (toastFrame.size.height - image.size.height) / 2, image.size.width, image.size.height);
+            imageFrame = CGRectMake([self theSettings].padding, (toastFrame.size.height - image.size.height) / 2, image.size.width, image.size.height);
             break;
         case iToastImageLocationTop:
-            imageFrame = CGRectMake((toastFrame.size.width - image.size.width) / 2, kComponentPadding, image.size.width, image.size.height);
+            imageFrame = CGRectMake((toastFrame.size.width - image.size.width) / 2, [self theSettings].padding, image.size.width, image.size.height);
             break;
             
         default:
@@ -360,6 +359,10 @@ static iToastSettings *sharedSettings = nil;
 	[self theSettings].bgAlpha = bgAlpha;
 	return self;
 }
+- (iToast *) setTextPadding:(CGFloat) padding {
+    [self theSettings].padding = padding;
+    return self;
+}
 
 
 -(iToastSettings *) theSettings{
@@ -388,6 +391,7 @@ static iToastSettings *sharedSettings = nil;
 @synthesize bgAlpha;
 @synthesize images;
 @synthesize imageLocation;
+@synthesize padding;
 
 - (void) setImage:(UIImage *) img withLocation:(iToastImageLocation)location forType:(iToastType) type {
 	if (type == iToastTypeNone) {
@@ -426,6 +430,7 @@ static iToastSettings *sharedSettings = nil;
 		sharedSettings.bgAlpha = 0.7;
 		sharedSettings.offsetLeft = 0;
 		sharedSettings.offsetTop = 0;
+		sharedSettings.padding = 20.0;
 	}
 	
 	return sharedSettings;
@@ -446,7 +451,8 @@ static iToastSettings *sharedSettings = nil;
 	copy.bgAlpha = self.bgAlpha;
 	copy.offsetLeft = self.offsetLeft;
 	copy.offsetTop = self.offsetTop;
-	
+	copy.padding = self.padding;
+
 	NSArray *keys = [self.images allKeys];
 	
 	for (NSString *key in keys){

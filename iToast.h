@@ -80,6 +80,7 @@ typedef enum {
 - (iToast *) setBgGreen:(CGFloat) bgGreen;
 - (iToast *) setBgBlue:(CGFloat) bgBlue;
 - (iToast *) setBgAlpha:(CGFloat) bgAlpha;
+- (iToast *) setTextPadding:(CGFloat) padding;
 
 + (iToast *) makeText:(NSString *) text;
 
@@ -103,6 +104,7 @@ typedef enum {
 	CGFloat bgAlpha;
 	NSInteger offsetLeft;
 	NSInteger offsetTop;
+    CGFloat padding;
 
 	NSDictionary *images;
 	
@@ -124,6 +126,7 @@ typedef enum {
 @property(assign) NSInteger offsetTop;
 @property(readonly) NSDictionary *images;
 @property(assign) iToastImageLocation imageLocation;
+@property(assign) CGFloat padding;
 
 
 - (void) setImage:(UIImage *)img forType:(iToastType) type;
