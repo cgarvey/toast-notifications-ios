@@ -88,13 +88,13 @@ static iToastSettings *sharedSettings = nil;
         
         switch ([theSettings imageLocation]) {
             case iToastImageLocationLeft:
-                [label setTextAlignment:UITextAlignmentLeft];
+				[label setTextAlignment:NSTextAlignmentLeft];
                 label.center = CGPointMake(image.size.width + [self theSettings].padding * 2
                                            + (v.frame.size.width - image.size.width - [self theSettings].padding * 2) / 2,
                                            v.frame.size.height / 2);
                 break;
             case iToastImageLocationTop:
-                [label setTextAlignment:UITextAlignmentCenter];
+                [label setTextAlignment:NSTextAlignmentCenter];
                 label.center = CGPointMake(v.frame.size.width / 2, 
                                            (image.size.height + [self theSettings].padding * 2
                                             + (v.frame.size.height - image.size.height - [self theSettings].padding * 2) / 2));
@@ -102,11 +102,10 @@ static iToastSettings *sharedSettings = nil;
             default:
                 break;
         }
-		
 	} else {
 		v.frame = CGRectMake(0, 0, textSize.width + [self theSettings].padding * 2, textSize.height + [self theSettings].padding * 2);
 		label.center = CGPointMake(v.frame.size.width / 2, v.frame.size.height / 2);
-		[label setTextAlignment:UITextAlignmentCenter];
+		[label setTextAlignment:NSTextAlignmentCenter];
 	}
 	CGRect lbfrm = label.frame;
 	lbfrm.origin.x = ceil(lbfrm.origin.x);
